@@ -36,29 +36,59 @@ namespace ConsoleApplication1
             return Int32.TryParse(Convert.ToString(c), out r);
         }
 
+        static bool isLetter(char c)
+        {
+            char r;
+            return char.TryParse(Convert.ToString(c), out r);
+        }
+
+        static char getLetterCharacter(int number)
+        {
+            if (number < 1 || number > 26) return '-';
+            char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+            return L[number - 1];
+        }
+
         static int getLetterNumber(char C)
         {
             char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
             List<char> letters = new List<char>(L);
             C = Char.ToUpper(C);
-            return (letters.IndexOf(C) + 1);
+            int index = letters.IndexOf(C);
+            if (index >= 0) return index + 1;
+            else return index;
         }
 
         static int getColumn(string addr)
         {
-            string column = getColumnString(addr);
+            char[] column = (getColumnString(addr)).ToCharArray();
             int lng = column.Length;
 
             if (lng == 0 || lng > 3) return 0;
 
+            int units;
+            int ten;
+            int hundreds;
+
             switch (lng)
             {
                 case 1:
-                    return 
+                    return getLetterNumber(column[0]);
 
+                case 2:
+                    units = getLetterNumber(column[1]);
+                    ten = getLetterNumber(column[0]) * 26;
+                    return ten + units;
+
+                case 3:
+                    units = getLetterNumber(column[2]);
+                    ten = getLetterNumber(column[1]) * 26;
+                    hundreds = getLetterNumber(column[0]) * 26 * 26;
+                    return ten + units + hundreds;
+                
+                default:
+                    return 0;
             }
-
-
         }
 
         static string getColumnString(string addr)
@@ -97,7 +127,7 @@ namespace ConsoleApplication1
             //AAB = 704
             //26
             // 1 - 26
-            string[] L = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+            string[] Letters = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
             const int level = 26;
 
             int div = Column / level;
@@ -129,11 +159,13 @@ namespace ConsoleApplication1
             int y = 26;
             int c = x / y;
             int d = x % y;
-            string adr = toAddress(12345, 729);
+            string adr = toAddress(12345, 2731);
             int row = getRow(adr);
             string col = getColumnString(adr);
+            int colNum = getColumn(adr);
 
-            Console.WriteLine("Address: {0}\nRow: {1}\nColumn: {2}", adr, row, col);
+            Console.WriteLine("Address: {0}\nRow: {1}\nColumn: {2}\nColumn number: {3}", adr, row, col, colNum);
+            Console.WriteLine("Letter: C\nLetter: {0}\nLetter number: {1}", getLetterCharacter(30),getLetterNumber('!'));
 
             Console.ReadLine();
         }

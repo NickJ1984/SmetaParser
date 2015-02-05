@@ -98,6 +98,58 @@ namespace ConsoleApplication1
 
         #region Address convertation methods
 
+        #region Column
+
+        public string getColumnLetters(string addr)
+        {
+            char[] src = addr.ToCharArray();
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < addr.Length; i++)
+            {
+                if (!isDigit(src[i])) result.Append(src[i]);
+                else break;
+            }
+
+            return result.ToString();
+        }
+
+        public int getColumn(string addr)
+        {
+            char[] column = (getColumnLetters(addr)).ToCharArray();
+            int lng = column.Length;
+
+            if (lng == 0 || lng > 3) return 0;
+
+            int units;
+            int ten;
+            int hundreds;
+
+            switch (lng)
+            {
+                case 1:
+                    return getLetterNumber(column[0]);
+
+                case 2:
+                    units = getLetterNumber(column[1]);
+                    ten = getLetterNumber(column[0]) * 26;
+                    return ten + units;
+
+                case 3:
+                    units = getLetterNumber(column[2]);
+                    ten = getLetterNumber(column[1]) * 26;
+                    hundreds = getLetterNumber(column[0]) * 26 * 26;
+                    return ten + units + hundreds;
+
+                default:
+                    return 0;
+            }
+        }
+
+        #endregion
+
+        #region Row
+
         public int getRow(string addr)
         {
             char[] src = addr.ToCharArray();
@@ -116,19 +168,23 @@ namespace ConsoleApplication1
             return Convert.ToInt32(result.ToString());
         }
 
-        public int getColumn(string addr)
-        { return (wsExcel.Range[addr] as Excel.Range).Column; }
+        #endregion
 
-        public int[] getRowColumn(string addr)
-        { return new int[2] {(wsExcel.Range[addr] as Excel.Range).Row, (wsExcel.Range[addr] as Excel.Range).Column}; }
+        #region Address
+
+        public string getAddressInitial(string addr)
+        {
+            return getColumnLetters(addr) + "1";
+        }
 
         public string getAddress(int Row, int Column)
         {
             //AAB = 704
             //26
             // 1 - 26
-            string[] Letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", 
-                                    "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+            if (Row < 1 || Column < 1) return null;
+
+            string[] Letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
             const int level = 26;
 
             int div = Column / level;
@@ -150,10 +206,19 @@ namespace ConsoleApplication1
 
         public string getRelativeAddress(string addr, int row = 0, int col = 0)
         {
-            if ((getRow(addr) + row) > maxRows || (getRow(addr) + row) < 1) return null;
-            if ((getColumn(addr) + col) > maxColumns || (getColumn(addr) + col) < 1) return null;
-            return getAddress(getRow(addr) + row, getColumn(addr) + col);
+            int cRow = getRow(addr);
+            int cColumn = getColumn(addr);
+
+            if ((cRow + row) > maxRows || (cRow + row) < 1) return null;
+            if ((cColumn + col) > maxColumns || (cColumn + col) < 1) return null;
+
+            return getAddress(cRow + row, cColumn + col);
         }
+
+        #endregion
+
+        public int[] getRowColumn(string addr)
+        { return new int[2] { (wsExcel.Range[addr] as Excel.Range).Row, (wsExcel.Range[addr] as Excel.Range).Column }; }
 
         #endregion
 
@@ -570,6 +635,29 @@ namespace ConsoleApplication1
         {
             int r;
             return Int32.TryParse(Convert.ToString(c), out r);
+        }
+
+        private bool isLetter(char c)
+        {
+            char r;
+            return char.TryParse(Convert.ToString(c), out r);
+        }
+
+        public char getLetterCharacter(int number)
+        {
+            if (number < 1 || number > 26) return '-';
+            char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+            return L[number - 1];
+        }
+
+        public int getLetterNumber(char C)
+        {
+            char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+            List<char> letters = new List<char>(L);
+            C = Char.ToUpper(C);
+            int index = letters.IndexOf(C);
+            if (index >= 0) return index + 1;
+            else return index;
         }
 
         #endregion
