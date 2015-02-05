@@ -10,3 +10,6 @@ D:\WORK\Урбан-Груп\Программирование\SmetaParser\Testing
 D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\obj\Debug\TestingSmetaParser.csprojResolveAssemblyReference.cache
 D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\bin\Debug\Testing.exe
 D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\bin\Debug\Testing.pdb
+D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Testing\bin\Debug\Testing.exe.config
+D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Testing\obj\Debug\Testing.exe
+D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Testing\obj\Debug\Testing.pdb

@@ -174,7 +174,15 @@ namespace ConsoleApplication1
 
         public string getAddressInitial(string addr)
         {
-            return getColumnLetters(addr) + "1";
+            if (addr == null) return null;
+
+            return "A" + getRow(addr);
+        }
+
+        public string getAddressInitial(int Row)
+        {
+            if (Row <= 0) return null;
+            return "A" + Row;
         }
 
         public string getAddress(int Row, int Column)
@@ -294,21 +302,38 @@ namespace ConsoleApplication1
             return firstFind.get_Address();
         }
 
-        public string[] find_exception(string Text, string RowStartAddress, string RowFinishAddress) //Доработать
+        public string[] find_exception(string Text, string StartAddress, string FinishAddress) //Дописал но не отладил
         {
-            int rsaColumn = getColumn(RowStartAddress);
+            int rsaColumn = getColumn(StartAddress);
+            int rfaColumn = getColumn(FinishAddress);
+            int rsaRow = getRow(StartAddress);
+            int rfaRow = getRow(FinishAddress);
+            bool Column = true;
+
+            int diffColumns = rfaColumn - rsaColumn;
+            int diffRows = rfaRow - rsaRow;
+            if (diffRows != 0 && diffColumns != 0) return null;
+            else
             {
-                int rfaColumn = getColumn(RowFinishAddress);
-                if (rfaColumn != rsaColumn) return null;
+                if (diffRows != 0) Column = true;
+                else if (diffColumns != 0) Column = false;
+                else return null;
+            }
+            
+            string adrFinish = find_once(Text, StartAddress, FinishAddress);
+            int start = (Column) ? getRow(StartAddress) : getColumn(StartAddress);
+            int finish = (Column) ? getRow(adrFinish) - 1 : getColumn(adrFinish);
+
+            string[] adrArray = new string[finish - start];
+            int cnt = 0;
+
+            for (int i = start; i <= finish; i++)
+            {
+                adrArray[cnt++] = getAddress((Column) ? i : rsaRow,
+                                             (Column) ? rsaColumn : i);
             }
 
-            string adrFinish = find_once(Text, RowStartAddress, RowFinishAddress);
-            int startRow = getRow(RowStartAddress);
-            int finishRow = getRow(adrFinish) - 1;
-
-
-
-            return null;
+            return adrArray;
         }
 
         #endregion
