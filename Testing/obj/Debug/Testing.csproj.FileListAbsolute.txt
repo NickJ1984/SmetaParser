@@ -1,0 +1,6 @@
+C:\WORK\Программирование\C#\Visual Studio\Projects\Testing\Testing\bin\Debug\Testing.exe.config
+C:\WORK\Программирование\C#\Visual Studio\Projects\Testing\Testing\bin\Debug\Testing.exe
+C:\WORK\Программирование\C#\Visual Studio\Projects\Testing\Testing\bin\Debug\Testing.pdb
+C:\WORK\Программирование\C#\Visual Studio\Projects\Testing\Testing\obj\Debug\Testing.exe
+C:\WORK\Программирование\C#\Visual Studio\Projects\Testing\Testing\obj\Debug\Testing.pdb
+C:\WORK\Программирование\C#\Visual Studio\Projects\Testing\Testing\obj\Debug\Testing.csprojResolveAssemblyReference.cache

@@ -1,0 +1,12 @@
+C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Testing\bin\Debug\Testing.exe.config
+C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Testing\obj\Debug\Testing.exe
+C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Testing\obj\Debug\Testing.pdb
+C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Testing\bin\Debug\Testing.exe
+C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Testing\bin\Debug\Testing.pdb
+C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Testing\obj\Debug\TestingSmetaParser.csprojResolveAssemblyReference.cache
+D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\bin\Debug\Testing.exe.config
+D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\obj\Debug\Testing.exe
+D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\obj\Debug\Testing.pdb
+D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\obj\Debug\TestingSmetaParser.csprojResolveAssemblyReference.cache
+D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\bin\Debug\Testing.exe
+D:\WORK\Урбан-Груп\Программирование\SmetaParser\TestingSmetaParser\Testing\bin\Debug\Testing.pdb
