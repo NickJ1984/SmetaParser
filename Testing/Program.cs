@@ -30,35 +30,6 @@ namespace ConsoleApplication1
             return null;
 
         }*/
-        static bool isDigit(char c)
-        {
-            int r;
-            return Int32.TryParse(Convert.ToString(c), out r);
-        }
-
-        static bool isLetter(char c)
-        {
-            char r;
-            return char.TryParse(Convert.ToString(c), out r);
-        }
-
-        static char getLetterCharacter(int number)
-        {
-            if (number < 1 || number > 26) return '-';
-            char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-            return L[number - 1];
-        }
-
-        static int getLetterNumber(char C)
-        {
-            char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
-            List<char> letters = new List<char>(L);
-            C = Char.ToUpper(C);
-            int index = letters.IndexOf(C);
-            if (index >= 0) return index + 1;
-            else return index;
-        }
-
         static int getColumn(string addr)
         {
             char[] column = (getColumnString(addr)).ToCharArray();
