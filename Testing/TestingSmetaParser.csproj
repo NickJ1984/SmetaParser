@@ -62,6 +62,7 @@
     <Compile Include="ErrorLog.cs" />
     <Compile Include="ExcelIO.cs" />
     <Compile Include="FileIO.cs" />
+    <Compile Include="LogStructure.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramFIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

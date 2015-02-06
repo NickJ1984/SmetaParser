@@ -114,9 +114,9 @@ namespace ConsoleApplication1
             return result.ToString();
         }
 
-        public int getColumn(string addr)
+        public int getColumn(string Column)
         {
-            char[] column = (getColumnLetters(addr)).ToCharArray();
+            char[] column = (getColumnLetters(Column)).ToCharArray();
             int lng = column.Length;
 
             if (lng == 0 || lng > 3) return 0;
@@ -207,6 +207,11 @@ namespace ConsoleApplication1
                 Convert.ToString(Row);
 
             return result;
+        }
+
+        public string getAddress(int Row, string Column) //Заготовка
+        {
+            return getAddress(Row, getColumn(Column));
         }
 
         public string getAddress(Excel.Range rng)
