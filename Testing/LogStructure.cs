@@ -21,30 +21,36 @@ namespace ConsoleApplication1
         private ust_lstruct[] data;
         private int count;
         private int current;
-        
-#region Constants
+        private string adrSmEnd;
+        private string adrEvEnd;
+        private ExcelIO eio;
+
+        #region Constants
         
         private const string eventTag = "Код ГС (SysID)";
         private const string smetaTag = "Смета";
         private const int smetaCol = 9;
-        private const int eventsCol = 4;
+        private const int eventsCol = 3;
 
-#endregion
+        #endregion
                 
 #endregion
 
 #region Constructors
 
-        public LogStructure() 
+        public LogStructure(ExcelIO source) 
         {
             data = new ust_lstruct[1];
+            eio = source;
         }
 
 #endregion
 
 #region Public Methods
 
-        public void addSmeta(string addr)
+        #region Add methods
+
+        private void addSmeta(string addr)
         {
             Array.Resize<ust_lstruct>(ref data, ++count);
             current = count - 1;
@@ -52,7 +58,7 @@ namespace ConsoleApplication1
             data[current].smeta = addr;
         }
 
-        public void addEvent(string addr)
+        private void addEvent(string addr)
         {
             if (data[current].events == null) data[current].events = new string[1];
             else Array.Resize(ref data[current].events, data[current].events.Length + 1);
@@ -60,7 +66,23 @@ namespace ConsoleApplication1
             data[current].events[data[current].events.Length - 1] = addr;
         }
 
-        private string adrSmetaStartFnd(ExcelIO eio)
+        private void addEvent(string[] addr)
+        {
+            if (data[current].events == null)
+            {
+                data[current].events = addr;
+                return;
+            }
+            else Array.Resize(ref data[current].events, data[current].events.Length + addr.Length);
+
+            for (int i = 0; i < addr.Length; i++) data[current].events[data[current].events.Length + i] = addr[i];
+        }
+
+        #endregion
+
+        #region Adress methods
+
+        private string adrStartFnd()
         {
             string tag = "Файл";
             string adrStart = "B1";
@@ -70,9 +92,46 @@ namespace ConsoleApplication1
             return eio.getRelativeAddress(adr, col: 7);
         }
 
-        public void buildStructure(ExcelIO eio)
+        private string getAdrSm(string adr)
         {
+            return eio.find_once(smetaTag, eio.getRelativeAddress(adr, 1), adrSmEnd);
+        }
+
+        private string getAdrEv(string adrSm)
+        {
+            string adr = eio.find_once(eventTag, eio.getAddress(eio.getRow(adrSm), eventsCol), adrEvEnd);
+            adr = eio.getAddress(eio.getRow(adr) + 1, "A");
             
+            return adr;
+        }
+
+        #endregion
+
+        public void buildStructure()
+        {
+            if (!eio.isOpen)
+            {
+                Console.WriteLine("Excel не открыт");
+                return;
+            }
+
+            adrEvEnd = eio.getAddress(eio.maxRows, eventsCol);
+            adrSmEnd = eio.getAddress(eio.maxRows, smetaCol);
+            
+            string adrSmStart = adrStartFnd();
+            string adrSm = getAdrSm(adrSmStart);
+            
+            string adrEv = null;
+
+            while (adrSm != null)
+            {
+                addSmeta(eio.getAddressInitial(adrSm));
+                adrEv = getAdrEv(adrSm);
+                addEvent(eio.find_exception("", adrEv, "A" + eio.maxRows));
+
+                adrSm = getAdrSm(adrSm);
+            }
+
         }
 
 #endregion

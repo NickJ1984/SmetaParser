@@ -27,7 +27,8 @@ namespace ConsoleApplication1
 
         public int maxColumns { get; private set; }
         public int maxRows { get; private set; }
-        private bool isOpen, isAppExcelOpen;
+        private bool isAppExcelOpen;
+        public bool isOpen { get; private set; }
         private Excel.Application appExcel;
         private Excel.Workbook wbExcel;
         private Excel.Worksheet wsExcel;
@@ -304,7 +305,7 @@ namespace ConsoleApplication1
             if (StartFrom != null) firstFind = area.Find(Text, StartFrom);
             else firstFind = area.Find(Text);
 
-            return addressDollarClear(firstFind.get_Address());
+            return (firstFind != null) ? addressDollarClear(firstFind.get_Address()) : null;
         }
 
         public string[] find_exception(string Text, string StartAddress, string FinishAddress)
