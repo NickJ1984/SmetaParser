@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
-    static class suppStr    
+    static class sup    
     {
+        static public void writelnArray(string[] text)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                Console.WriteLine("#{0}: {1}", i + 1, text[i]);
+            }
+        }
+
         static public int[] symbPosSrch(string text, char symb, int startPos = 0, int finPos = 0)
         {
             int[] arr = new int[1];

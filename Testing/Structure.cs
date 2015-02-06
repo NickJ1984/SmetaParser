@@ -61,13 +61,13 @@ namespace ConsoleApplication1
 
         private bool genChk()
         {
-            if (suppStr.symbSum(sourceString, gSep) == 2) return true;
+            if (sup.symbSum(sourceString, gSep) == 2) return true;
             else return false;
         }
 
         private bool codeChk()
         {
-            if (suppStr.symbSum(Code, cSep) > 0) return true;
+            if (sup.symbSum(Code, cSep) > 0) return true;
             else return false;
         }
 

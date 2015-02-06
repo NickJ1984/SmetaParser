@@ -272,7 +272,7 @@ namespace ConsoleApplication1
                 else if (currentFind.get_Address(Excel.XlReferenceStyle.xlA1) == firstFind.get_Address(Excel.XlReferenceStyle.xlA1)) break;
                 
                 Array.Resize<string>(ref array, ++cnt);
-                if (ADR) array[cnt - 1] = currentFind.get_Address(Excel.XlReferenceStyle.xlA1);
+                if (ADR) array[cnt - 1] = addressDollarClear(currentFind.get_Address(Excel.XlReferenceStyle.xlA1));
                 else array[cnt - 1] = currentFind.Text;
 
                 currentFind = area.FindNext(currentFind);
@@ -299,10 +299,10 @@ namespace ConsoleApplication1
             if (StartFrom != null) firstFind = area.Find(Text, StartFrom);
             else firstFind = area.Find(Text);
 
-            return firstFind.get_Address();
+            return addressDollarClear(firstFind.get_Address());
         }
 
-        public string[] find_exception(string Text, string StartAddress, string FinishAddress) //Дописал но не отладил
+        public string[] find_exception(string Text, string StartAddress, string FinishAddress)
         {
             int rsaColumn = getColumn(StartAddress);
             int rfaColumn = getColumn(FinishAddress);
@@ -324,7 +324,7 @@ namespace ConsoleApplication1
             int start = (Column) ? getRow(StartAddress) : getColumn(StartAddress);
             int finish = (Column) ? getRow(adrFinish) - 1 : getColumn(adrFinish);
 
-            string[] adrArray = new string[finish - start];
+            string[] adrArray = new string[finish - start + 1];
             int cnt = 0;
 
             for (int i = start; i <= finish; i++)
@@ -655,6 +655,11 @@ namespace ConsoleApplication1
         #endregion
 
         #region Service methods
+
+        private string addressDollarClear(string addr)
+        {
+            return addr.Replace("$", "");
+        }
 
         private bool isDigit(char c)
         {

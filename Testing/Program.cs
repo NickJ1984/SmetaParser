@@ -30,68 +30,7 @@ namespace ConsoleApplication1
             return null;
 
         }*/
-        static int getColumn(string addr)
-        {
-            char[] column = (getColumnString(addr)).ToCharArray();
-            int lng = column.Length;
-
-            if (lng == 0 || lng > 3) return 0;
-
-            int units;
-            int ten;
-            int hundreds;
-
-            switch (lng)
-            {
-                case 1:
-                    return getLetterNumber(column[0]);
-
-                case 2:
-                    units = getLetterNumber(column[1]);
-                    ten = getLetterNumber(column[0]) * 26;
-                    return ten + units;
-
-                case 3:
-                    units = getLetterNumber(column[2]);
-                    ten = getLetterNumber(column[1]) * 26;
-                    hundreds = getLetterNumber(column[0]) * 26 * 26;
-                    return ten + units + hundreds;
-                
-                default:
-                    return 0;
-            }
-        }
-
-        static string getColumnString(string addr)
-        {
-            char[] src = addr.ToCharArray();
-            StringBuilder result = new StringBuilder();
-
-            for (int i = 0; i < addr.Length; i++)
-            {
-                if (!isDigit(src[i])) result.Append(src[i]);
-                else break;
-            }
-
-            return result.ToString();
-        }
-
-        static int getRow(string addr)
-        {
-            char[] src = addr.ToCharArray();
-            StringBuilder result = new StringBuilder();
-
-            for (int i = addr.Length - 1; i >= 0; i--)
-            {
-                if (isDigit(src[i]))
-                {
-                    if (result.Length == 0) result.Append(src[i]);
-                    else result.Insert(0, src[i]);
-                }
-            }
-            
-            return Convert.ToInt32(result.ToString());
-        }
+        
 
         static string toAddress(int Row, int Column) //Доделать
         {
@@ -118,26 +57,17 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
 
-            /*
             ExcelIO eio = new ExcelIO(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");
             eio.Open();
-            string[] addr = eio.find("", "A1", "A245");
+            //string[] addr = eio.find("", "A1", "A245");
+            string[] addr = eio.find_exception("", "A25", "A136");
+            sup.writelnArray(addr);
+
             eio.Quit();
             /*
             ErrorLog el = new ErrorLog();
             ust_LogSmeta[] ustLS = el.getLogFileData(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");*/
-            int x = 704;
-            int y = 26;
-            int c = x / y;
-            int d = x % y;
-            string adr = toAddress(12345, 2731);
-            int row = getRow(adr);
-            string col = getColumnString(adr);
-            int colNum = getColumn(adr);
-
-            Console.WriteLine("Address: {0}\nRow: {1}\nColumn: {2}\nColumn number: {3}", adr, row, col, colNum);
-            Console.WriteLine("Letter: C\nLetter: {0}\nLetter number: {1}", getLetterCharacter(30),getLetterNumber('!'));
-
+            
             Console.ReadLine();
         }
     }
