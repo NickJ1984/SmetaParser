@@ -28,8 +28,10 @@ namespace ConsoleApplication1
         #region Constants
         
         private const string eventTag = "Код ГС (SysID)";
-        private const string smetaTag = "Смета";
-        private const int smetaCol = 9;
+        //private const string smetaTag = "Смета";
+        private const string smetaTag = ".xml";
+        //private const int smetaCol = 9;
+        private const int smetaCol = 2;
         private const int eventsCol = 3;
 
         #endregion
@@ -89,12 +91,16 @@ namespace ConsoleApplication1
             string adrFinish = "B100";
 
             string adr = eio.find_once(tag, adrStart, adrFinish);
-            return eio.getRelativeAddress(adr, col: 7);
+            return adr;
+            //return eio.getRelativeAddress(adr, col: 7);
         }
 
         private string getAdrSm(string adr)
         {
-            return eio.find_once(smetaTag, eio.getRelativeAddress(adr, 1), adrSmEnd);
+            //return eio.find_once(smetaTag, eio.getRelativeAddress(adr, 1), adrSmEnd);
+            int row = eio.getRow(adr) + 1;
+            string address = eio.getAddress(row, smetaCol);
+            return eio.find_once(smetaTag, address, adrSmEnd);
         }
 
         private string getAdrEv(string adrSm)
@@ -119,7 +125,7 @@ namespace ConsoleApplication1
             adrSmEnd = eio.getAddress(eio.maxRows, smetaCol);
             
             string adrSmStart = adrStartFnd();
-            string adrSm = getAdrSm(adrSmStart);
+            string adrSm = getAdrSm(eio.getRelativeAddress(adrSmStart,-1));
             
             string adrEv = null;
 
