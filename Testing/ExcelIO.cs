@@ -310,6 +310,8 @@ namespace ConsoleApplication1
 
         public string[] find_exception(string Text, string StartAddress, string FinishAddress)
         {
+            if (getCellValue(StartAddress) == Text) return null;
+
             int rsaColumn = getColumn(StartAddress);
             int rfaColumn = getColumn(FinishAddress);
             int rsaRow = getRow(StartAddress);

@@ -14,11 +14,11 @@ namespace ConsoleApplication1
         public string[] events;
     }
 
-    class LogStructure
+    class structureBuilder
     {
 #region Variables
 
-        private ust_lstruct[] data;
+        public ust_lstruct[] data { get; private set; }
         private int count;
         private int current;
         private string adrSmEnd;
@@ -40,10 +40,20 @@ namespace ConsoleApplication1
 
 #region Constructors
 
-        public LogStructure(ExcelIO source) 
+        public structureBuilder(ExcelIO source) 
         {
             data = new ust_lstruct[1];
             eio = source;
+        }
+
+        public structureBuilder(structureBuilder sB)
+        {
+            data = sB.data;
+            count = sB.count;
+            current = sB.current;
+            adrSmEnd = sB.adrSmEnd;
+            adrEvEnd = sB.adrEvEnd;
+            eio = sB.eio;
         }
 
 #endregion
@@ -113,6 +123,8 @@ namespace ConsoleApplication1
 
         #endregion
 
+        #region Structure methods
+
         public void buildStructure()
         {
             if (!eio.isOpen)
@@ -139,6 +151,33 @@ namespace ConsoleApplication1
             }
 
         }
+
+        #endregion
+
+        #region Service methods
+
+        public void Copy(ref structureBuilder sb)
+        {
+            sb.data = data;
+            sb.count = count;
+            sb.current = current;
+            sb.adrEvEnd = adrEvEnd;
+            sb.adrSmEnd = adrSmEnd;
+            sb.eio = eio;
+        }
+
+        public void Reset()
+        {
+            data = null;
+            count = 0;
+            current = 0;
+            adrEvEnd = null;
+            adrSmEnd = null;
+
+            System.GC.Collect();
+        }
+
+        #endregion
 
 #endregion
 

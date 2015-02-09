@@ -16,9 +16,9 @@ namespace ConsoleApplication1
         {
             //Log_2015-01-12_15-51-37.xlsx
             //Log_2014-12-30_15-25-53.xlsx
-            ExcelIO eio = new ExcelIO(@"D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Archive_logs\Log_2014-12-30_15-25-53.xlsx");
-            //ExcelIO eio = new ExcelIO(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");
-            LogStructure ls = new LogStructure(eio);
+            //ExcelIO eio = new ExcelIO(@"D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Archive_logs\Log_2014-12-30_15-25-53.xlsx");
+            ExcelIO eio = new ExcelIO(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");
+            structureBuilder ls = new structureBuilder(eio);
             eio.Open();
             //eio.find_once("1234", "A1", "A3");
             ls.buildStructure();
