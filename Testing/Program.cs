@@ -21,7 +21,8 @@ namespace ConsoleApplication1
             structureBuilder ls = new structureBuilder(eio);
             eio.Open();
             //eio.find_once("1234", "A1", "A3");
-            ls.buildStructure();
+            //ls.buildStructure();
+            string str = eio.getCellValue(9, 15);
             eio.Quit();
             Console.ReadLine();
         }

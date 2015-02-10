@@ -598,7 +598,7 @@ namespace ConsoleApplication1
 
         public string getCellValue(int rowInd, int colInd)
         {
-            if (rowInd >= maxRows || colInd >= maxColumns || colInd < 1 || rowInd < 1) return null;
+            if (rowInd > maxRows || colInd > maxColumns || colInd < 1 || rowInd < 1) return null;
             return (wsExcel.Range[getAddress(rowInd, colInd)] as Excel.Range).Text;
             /*Excel.Range cellRange;
             string cellValue = "";

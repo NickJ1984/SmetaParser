@@ -18,12 +18,13 @@ namespace ConsoleApplication1
     {
 #region Variables
 
-        public ust_lstruct[] data { get; private set; }
+        private ust_lstruct[] data;
         private int count;
         private int current;
         private string adrSmEnd;
         private string adrEvEnd;
         private ExcelIO eio;
+        private bool isBuilded;
 
         #region Constants
         
@@ -149,12 +150,18 @@ namespace ConsoleApplication1
 
                 adrSm = getAdrSm(adrSm);
             }
-
+            isBuilded = true;
         }
 
         #endregion
 
         #region Service methods
+
+        public ust_lstruct[] getData()
+        {
+            if (isBuilded) return data;
+            else return null;
+        }
 
         public void Copy(ref structureBuilder sb)
         {
@@ -173,6 +180,7 @@ namespace ConsoleApplication1
             current = 0;
             adrEvEnd = null;
             adrSmEnd = null;
+            isBuilded = false;
 
             System.GC.Collect();
         }

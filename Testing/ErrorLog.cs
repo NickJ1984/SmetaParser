@@ -48,6 +48,7 @@ namespace ConsoleApplication1
         public string Project;
         public string Number;
         public string Status;
+        public string Time;
     }
 
     public struct ust_LogFileDescription

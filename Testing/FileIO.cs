@@ -77,7 +77,7 @@ namespace ConsoleApplication1
             {
                 ext[i] = ext[i].Substring(ext[i].LastIndexOf('.'), ext[i].Length - ext[i].LastIndexOf('.'));
                 files[i] = files[i].Substring(files[i].LastIndexOf('\\') + 1, files[i].Length - (files[i].LastIndexOf('\\')+ 1 + ext[i].Length));
-                //fileCreationTime[i] = File.GetCreationTime(filePath[i]);
+                //fileCreationTime[i] = File.GetCreationTime(filePath[i]); 
                 fileCreationTime[i] = File.GetLastWriteTime(filePath[i]);
             }
 

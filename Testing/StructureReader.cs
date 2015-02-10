@@ -6,19 +6,34 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
+    /* ust_LogFile
+     *  File (ust_LogFileDescription)
+     *      FullPath (string)
+     *      FileName (string)
+     *      DateOfCreation (DateTime)
+     *  
+     *  Body (ust_LogSmeta)
+     *      Description (ust_LogSmetaDescription)
+     *          Smeta (ust_Smeta)
+     *          LoadTime (DateTime)
+     *          Loaded (bool)
+     *      Data (ust_LogSmetaData[])       
+     * 
+     */
+
     class structureReader
     {
         #region Variables
 
         private ust_lstruct[] data;
-        private ust_LogFile[] log { get; private set; }
+        public ust_LogFile[] log { get; private set; }
         private ExcelIO eio;
 
         #endregion
 
         #region Constructors
         //public void structureReader() { }
-        public void structureReader(ust_lstruct[] structureBuilderData, ExcelIO Excel)
+        public structureReader(ust_lstruct[] structureBuilderData, ExcelIO Excel)
         {
             data = structureBuilderData;
             eio = Excel;
@@ -29,7 +44,10 @@ namespace ConsoleApplication1
 
         private void process()
         {
+            for (int i = 0; i < log.Length; i++)
+            {
 
+            }
         }
 
         #region User structures writing methods
@@ -52,9 +70,10 @@ namespace ConsoleApplication1
             return getEventLine(Row);
         }
 
-        private void isLoaded(ust_LogSmetaDescription lsd)
+        private void setSmetaDescriptionArguments(ref ust_LogSmetaDescription lsd)
         {
-
+            lsd = isLoaded(lsd);
+            if (lsd.Loaded) lsd.LoadTime = DateTime.Parse(lsd.Smeta.Time);
         }
 
         #endregion
@@ -89,6 +108,8 @@ namespace ConsoleApplication1
             ust_Smeta Smeta = new ust_Smeta();
             int Row = eio.getRow(adr);
 
+            //15 - колонка дата загрузки
+
             Smeta.FileName = eio.getCellValue(Row, 2);
             Smeta.Status = eio.getCellValue(Row, 3);
             Smeta.Code = eio.getCellValue(Row, 4);
@@ -96,8 +117,21 @@ namespace ConsoleApplication1
             Smeta.Object = eio.getCellValue(Row, 6);
             Smeta.Name = eio.getCellValue(Row, 8);
             Smeta.Number = eio.getCellValue(Row, 10);
+            Smeta.Time = eio.getCellValue(Row, 15);
 
             return Smeta;
+        }
+
+        #endregion
+
+        #region Check methods
+
+        private ust_LogSmetaDescription isLoaded(ust_LogSmetaDescription lsd)
+        {
+            string loaded = "Загружен";
+            if (lsd.Smeta.Status == loaded) lsd.Loaded = true;
+            else lsd.Loaded = false;
+            return lsd;
         }
 
         #endregion
