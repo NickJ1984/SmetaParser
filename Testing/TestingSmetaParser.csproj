@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cell.cs" />
     <Compile Include="ErrorLog.cs" />
     <Compile Include="ExcelIO.cs" />
     <Compile Include="FileIO.cs" />
