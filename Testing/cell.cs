@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.IO;
 using Excel = Microsoft.Office.Interop.Excel;
+using XlReferenceStyle = Microsoft.Office.Interop.Excel.XlReferenceStyle;
 
 namespace ConsoleApplication1
 {
@@ -18,7 +19,7 @@ namespace ConsoleApplication1
         public string ColumnS { get; private set; }
         public string Address { get; private set; }
         private object value;
-        private bool isEmpty;
+        private bool isEmpty = true;
 
         #endregion
 
@@ -49,7 +50,14 @@ namespace ConsoleApplication1
 
         public cellAddress(cellAddress cellAdr)
         {
-            addressSet(cellAdr.Row, cellAdr.ColumnS);
+            Copy(cellAdr);
+        }
+
+        public cellAddress(Excel.Range rng)
+        {
+            string adr = rng.get_Address(XlReferenceStyle.xlA1);
+            adr = addressDollarClear(adr);
+            addressSet(adr);
         }
 
         #endregion
@@ -69,15 +77,29 @@ namespace ConsoleApplication1
 
         #endregion
 
+        #region User methods
+
         public void Copy(cellAddress ca)
         {
-
+            Row = ca.Row;
+            ColumnI = ca.ColumnI;
+            ColumnS = ca.ColumnS;
+            Address = ca.Address;
+            value = ca.value;
+            isEmpty = ca.isEmpty;
         }
 
         public void Clear()
         {
-
+            Row = 0;
+            ColumnI = 0;
+            ColumnS = null;
+            Address = null;
+            value = null;
+            isEmpty = true;
         }
+
+        #endregion
 
         #endregion
 
@@ -292,6 +314,15 @@ namespace ConsoleApplication1
             addressChange();
         }
 
+        private void addressSet(Excel.Range rng)
+        {
+            addressSet(
+                addressDollarClear(
+                    rng.get_Address(XlReferenceStyle.xlA1)
+                                  )
+                       );
+        }
+
         private void addressChange()
         {
             //Address = getAddress(Row, ColumnS);
@@ -339,6 +370,23 @@ namespace ConsoleApplication1
             adr = addressDollarClear(adr);
             
             if(addressChangeCheck(adr)) addressSet(adr);
+        }
+
+        public void addressSetValue(Excel.Range rng)
+        {
+            if (rng == null) return;
+            addressSet(rng);
+        }
+
+        #endregion
+
+        #region Get
+
+        public Excel.Range addressGetRange()
+        {
+            Excel.Worksheet ws = new Excel.Worksheet();
+
+            return (Excel.Range)ws.get_Range(Address);
         }
 
         #endregion

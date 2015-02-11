@@ -26,7 +26,9 @@ namespace ConsoleApplication1
         #region Variables
 
         private ust_lstruct[] data;
-        public ust_LogFile[] log { get; private set; }
+        public ust_LogSmeta[] smetalog { get; private set; }
+        private bool isRead;
+
         private ExcelIO eio;
 
         #endregion
@@ -41,19 +43,64 @@ namespace ConsoleApplication1
 
         #endregion
 
+        #region User public methods
 
-        private void process()
+        public void Connect(ust_lstruct[] structureBuilderData, ExcelIO Excel)
         {
-            for (int i = 0; i < log.Length; i++)
-            {
-
-            }
+            clear();
+            data = structureBuilderData;
+            eio = Excel;
         }
+
+        public void Read()
+        {
+            smetalog = new ust_LogSmeta[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                smetalog[i].Description.Smeta = getSmetaLine(data[i].smeta);
+                setSmetaDescriptionArguments(ref smetalog[i].Description);
+                smetalog[i].Data = getEventsArray(i);
+            }
+            isRead = true;
+        }
+
+        /*
+        public ust_LogSmeta[] getLogSmeta()
+        { return smetalog; }*/
+
+        #endregion
+
+        #region Service
+
+        private void clear()
+        {
+            data = null;
+            smetalog = null;
+            isRead = false;
+            eio = null;
+
+            System.GC.Collect();
+        }
+
+        #endregion
 
         #region User structures writing methods
 
+        private void setSmetaDescriptionArguments(ref ust_LogSmetaDescription lsd)
+        {
+            lsd = isLoaded(lsd);
+            if (lsd.Loaded) lsd.LoadTime = DateTime.Parse(lsd.Smeta.Time);
+        }
+
+        #endregion
+
+        #region Read from Excel methods
+
         private ust_LogSmetaData[] getEventsArray(int index)
         {
+            if (data[index].events == null) return null;
+
             int lng = data[index].events.Length;
             int Row = eio.getRow(data[index].events[0]);
             ust_LogSmetaData[] evs = new ust_LogSmetaData[lng];
@@ -69,16 +116,6 @@ namespace ConsoleApplication1
 
             return getEventLine(Row);
         }
-
-        private void setSmetaDescriptionArguments(ref ust_LogSmetaDescription lsd)
-        {
-            lsd = isLoaded(lsd);
-            if (lsd.Loaded) lsd.LoadTime = DateTime.Parse(lsd.Smeta.Time);
-        }
-
-        #endregion
-
-        #region Read from Excel methods
 
         private ust_LogSmetaData getEventLine(int Row)
         {

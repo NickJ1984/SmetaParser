@@ -23,7 +23,7 @@ namespace ConsoleApplication1
     public struct ust_LogFile
     {
         public ust_LogFileDescription File;
-        public ust_LogSmeta Body;
+        public ust_LogSmeta[] Body;
     }
 
     public struct ust_LogSmeta
@@ -69,7 +69,9 @@ namespace ConsoleApplication1
     }
     #endregion
 
+#region Old version (commented)
 
+/*
     class ErrorLog
     {
         #region Variables
@@ -237,6 +239,7 @@ namespace ConsoleApplication1
             return errorEvents;
         }*/
         //не используется
+    /*
         #endregion
 
         public ust_LogSmetaData[] getEventData(ust_LogSmetaRegion lsr, ExcelIO eio)
@@ -269,6 +272,7 @@ namespace ConsoleApplication1
              * 5 - Наименование
              * 6 - Описание
              */
+    /*
             ust_LogSmetaData lsd;
 
             lsd.ppNumber = eio.getCellValue(Row, 1);
@@ -462,6 +466,7 @@ namespace ConsoleApplication1
 
             return Smeta;
         }*/ //Не используется
+    /*
         #endregion
 
         public ust_Smeta getUstSmetaData(string smetaAddress, ExcelIO eio)
@@ -480,8 +485,12 @@ namespace ConsoleApplication1
             return Smeta;
         }
         #endregion
-    }
+    }*/
+    #endregion
+
 }
+
+
 
 #region Temporary
 /*

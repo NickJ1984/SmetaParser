@@ -74,7 +74,7 @@ namespace ConsoleApplication1
         {
             object missingObj = System.Reflection.Missing.Value;
 
-            wbExcel.Close(false, missingObj, missingObj);
+            if(isOpen) wbExcel.Close(false, missingObj, missingObj);
             appExcel.Quit();
             System.Runtime.InteropServices.Marshal.ReleaseComObject(appExcel);
             appExcel = null;
@@ -681,14 +681,14 @@ namespace ConsoleApplication1
             return char.TryParse(Convert.ToString(c), out r);
         }
 
-        public char getLetterCharacter(int number)
+        private char getLetterCharacter(int number)
         {
             if (number < 1 || number > 26) return '-';
             char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
             return L[number - 1];
         }
 
-        public int getLetterNumber(char C)
+        private int getLetterNumber(char C)
         {
             char[] L = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
             List<char> letters = new List<char>(L);

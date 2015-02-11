@@ -17,12 +17,42 @@ namespace ConsoleApplication1
             //Log_2015-01-12_15-51-37.xlsx
             //Log_2014-12-30_15-25-53.xlsx
             //ExcelIO eio = new ExcelIO(@"D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Archive_logs\Log_2014-12-30_15-25-53.xlsx");
-            ExcelIO eio = new ExcelIO(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");
-            structureBuilder ls = new structureBuilder(eio);
-            eio.Open();
-            //eio.find_once("1234", "A1", "A3");
-            //ls.buildStructure();
-            string str = eio.getCellValue(9, 15);
+            //ExcelIO eio = new ExcelIO(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");
+            ust_LogFile[] lf;
+            FileIO fio = new FileIO(@"C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Archive_logs");
+            fio.searchPattern = "*.xlsx";
+            fio.scan();
+            lf = new ust_LogFile[fio.logfiles.Length];
+            ExcelIO eio = new ExcelIO();
+
+            string bs = "Building structure...";
+            string rs = "Reading structure...";
+
+            for (int i = 0; i < lf.Length; i++)
+            {
+                //Console.SetCursorPosition(0, 0);
+                Console.WriteLine("# {0} \\ {1}", i, lf.Length);
+                lf[i].File = fio.logfiles[i];
+
+                eio.Open(lf[i].File.FullPath);
+                
+                Console.WriteLine(bs);    
+                structureBuilder sb = new structureBuilder(eio);
+                sb.buildStructure();
+                Console.SetCursorPosition(0, 1); Console.WriteLine(bs+"[OK]");
+
+                Console.WriteLine(rs);    
+                structureReader sr = new structureReader(sb.getData(), eio);
+                sr.Read();
+                lf[i].Body = sr.smetalog;
+                Console.SetCursorPosition(0, 2); Console.WriteLine(rs + "[OK]");
+                                
+                sb = null;
+                sr = null;
+                eio.CloseWB();
+                System.GC.Collect();
+                Console.Clear();
+            }
             eio.Quit();
             Console.ReadLine();
         }
