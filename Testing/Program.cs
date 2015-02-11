@@ -25,33 +25,28 @@ namespace ConsoleApplication1
             lf = new ust_LogFile[fio.logfiles.Length];
             ExcelIO eio = new ExcelIO();
 
-            string bs = "Building structure...";
-            string rs = "Reading structure...";
-
+            ProgressBar pb = new ProgressBar(lf.Length);
+            pb.percentOutput = true;
+            
             for (int i = 0; i < lf.Length; i++)
             {
-                //Console.SetCursorPosition(0, 0);
-                Console.WriteLine("# {0} \\ {1}", i, lf.Length);
+                pb.NextStep();
+                pb.Output();
                 lf[i].File = fio.logfiles[i];
 
                 eio.Open(lf[i].File.FullPath);
                 
-                Console.WriteLine(bs);    
                 structureBuilder sb = new structureBuilder(eio);
                 sb.buildStructure();
-                Console.SetCursorPosition(0, 1); Console.WriteLine(bs+"[OK]");
-
-                Console.WriteLine(rs);    
+                
                 structureReader sr = new structureReader(sb.getData(), eio);
                 sr.Read();
                 lf[i].Body = sr.smetalog;
-                Console.SetCursorPosition(0, 2); Console.WriteLine(rs + "[OK]");
                                 
                 sb = null;
                 sr = null;
                 eio.CloseWB();
                 System.GC.Collect();
-                Console.Clear();
             }
             eio.Quit();
             Console.ReadLine();
