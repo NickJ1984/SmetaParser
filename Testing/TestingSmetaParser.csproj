@@ -52,6 +52,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,9 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cell.cs" />
+    <Compile Include="DBConverter.cs" />
     <Compile Include="ErrorLog.cs" />
     <Compile Include="ExcelIO.cs" />
     <Compile Include="FileIO.cs" />
+    <Compile Include="JSONSerializer.cs" />
     <Compile Include="ProgressBar.cs" />
     <Compile Include="StructureBuilder.cs" />
     <Compile Include="Program.cs" />
