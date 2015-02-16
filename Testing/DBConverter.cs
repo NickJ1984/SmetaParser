@@ -68,11 +68,44 @@ namespace ConsoleApplication1
                 
         }
 
+        private bool IndexOfError(ust_LogSmetaData lsd)  //предикат метода errorRecFill
+        {
+            string mrk = "Ошибка";
+            return lsd.Event.Contains(mrk);            
+        }
+
         private void errorRecFill(int DBIndex)
         {
             List<ust_LogSmetaData> Data = new List<ust_LogSmetaData>(DB[DBIndex].Logs[DB[DBIndex].Logs.Count - 1].Data);
-            string mrk = "Ошибка";
+            int[] eInd = new int[1];
+            int cnt = 0;
 
+            int index = Data.FindIndex(0, IndexOfError);
+            if (index == -1) return;
+            
+            while (index != -1)
+            {
+                Array.Resize<int>(ref eInd, ++cnt);
+                eInd[eInd.Length - 1] = index;
+
+                index = Data.FindIndex(index + 1, IndexOfError);
+            }
+
+            foreach (int ind in eInd)
+            {
+                db_errorRecord er = new db_errorRecord();
+                string ev = Data[ind].Event;
+                int iOfDot = ev.IndexOf('.');
+                int iOfSpc = ev.IndexOf(' ');
+
+                er.Number = int.Parse(ev.Substring(iOfSpc + 1, iOfDot - iOfSpc - 1));
+                er.RecordIndex = ind;
+                er.Description = ev.Substring(iOfDot + 2);
+
+                DB[DBIndex].Logs[DB[DBIndex].Logs.Count - 1].Errors.Add(er);
+                    
+            }
+            
 
 
         }
