@@ -76,6 +76,8 @@ namespace ConsoleApplication1
 
         private void errorRecFill(int DBIndex)
         {
+            //Ошибка 29. Сумма загружаемого из ГрандСметы акта отличается от суммы соответствующей утвержденной КС-2 в 1С на -72 317,66
+
             List<ust_LogSmetaData> Data = new List<ust_LogSmetaData>(DB[DBIndex].Logs[DB[DBIndex].Logs.Count - 1].Data);
             int[] eInd = new int[1];
             int cnt = 0;
@@ -91,9 +93,12 @@ namespace ConsoleApplication1
                 index = Data.FindIndex(index + 1, IndexOfError);
             }
 
+            db_errorRecord er = new db_errorRecord();
+
             foreach (int ind in eInd)
             {
-                db_errorRecord er = new db_errorRecord();
+                er.Description = null; er.Number = 0; er.RecordIndex = 0; //reinit
+
                 string ev = Data[ind].Event;
                 int iOfDot = ev.IndexOf('.');
                 int iOfSpc = ev.IndexOf(' ');
@@ -103,11 +108,7 @@ namespace ConsoleApplication1
                 er.Description = ev.Substring(iOfDot + 2);
 
                 DB[DBIndex].Logs[DB[DBIndex].Logs.Count - 1].Errors.Add(er);
-                    
             }
-            
-
-
         }
 
         private bool isRange(int index)
@@ -116,7 +117,6 @@ namespace ConsoleApplication1
 
             return (index >= 0 && index <= (DB.Count - 1)) ? true : false;
         }
-
     }
 
 
