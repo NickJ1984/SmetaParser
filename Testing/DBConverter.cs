@@ -19,7 +19,7 @@ namespace ConsoleApplication1
     {
         public int Number;
         public string Description;
-        public int RecordIndex;
+        //public int RecordIndex;
     }
 
     public struct db_logfileRecord
@@ -28,8 +28,6 @@ namespace ConsoleApplication1
         public ust_LogSmetaDescription SmetaDescription;
         public List<ust_LogSmetaData> Data;
         public List<db_errorRecord> Errors;
-
-        public string smetaError;
     }
 
     public struct db_record
@@ -40,34 +38,100 @@ namespace ConsoleApplication1
     }
 
 
-    class DB
+    class DBShell
     {
         public List<db_record> DB { get; private set; }
+        
+        public DBShell() 
+        {
+            DB = new List<db_record>();
+        }
 
-        public DB() { }
+        #region Add methods
 
-        public void NewRecord(db_smetaRecord smeta)
+        public void AddElement()
         {
             if (DB == null) DB = new List<db_record>();
 
             db_record rec = new db_record();
-            rec.Smeta = smeta;
+            
+            rec.Index = DB.Count - 1;
             DB.Add(rec);
-
-            //finish = false;
         }
 
-        public void AddLogFileRecord(ust_LogFile logfile, int LFindex = 0, int DBindex = -1)
+        public void AddSmetaInfo(int index, ust_LogSmetaDescription lsd)
         {
-            db_logfileRecord lfR = new db_logfileRecord();
-            lfR.File = logfile.File;
-            lfR.Data = logfile.Body[LFindex].Data.ToList<ust_LogSmetaData>();
-            lfR.SmetaDescription = logfile.Body[LFindex].Description;
-            DB[DBindex].Logs.Add(lfR);
-
-                
+            db_record dbr = DB.ElementAt(index);
+            db_smetaRecord sr = new db_smetaRecord();
+            sr.Code = lsd.Smeta.Code;
+            sr.DateLoad = lsd.LoadTime;
+            sr.Name = lsd.Smeta.Name;
+            sr.Object = lsd.Smeta.Object;
+            sr.Project = lsd.Smeta.Project;
+            dbr.Smeta = sr;
+            DB[index] = dbr;
         }
 
+        #region alfr service
+
+        private int alfr_findSmetaIndex(string code, ust_LogFile lf)
+        {
+            for (int i = 0; i <= lf.Body.Length; i++)
+                if (code.ToUpper() == lf.Body[i].Description.Smeta.Code.ToUpper()) return i;
+            return -1; 
+        }
+
+        private void alfr_fillErrors(ref db_logfileRecord lfr)
+        {
+            if (lfr.Data == null) return;
+            if (lfr.Data.Count < 1) return;
+
+            List<ust_LogSmetaData> errors = lfr.Data.FindAll(
+                delegate(ust_LogSmetaData lsd) 
+                    {
+                        return lsd.Event.Contains("Ошибка");
+                    });
+           db_errorRecord eR = new db_errorRecord();
+           foreach(ust_LogSmetaData err in errors)
+           {
+               eR.Description = null; eR.Number = 0; //reinit
+               int iOfDot = err.Event.IndexOf('.');
+               int iOfSpc = err.Event.IndexOf(' ');
+
+               eR.Number = int.Parse(err.Event.Substring(iOfSpc + 1, iOfDot - iOfSpc - 1));
+               eR.Description = err.Event.Substring(iOfDot + 2);
+
+               lfr.Errors.Add(eR);
+           }
+
+        }
+        #endregion
+        public void AddLogFileRecord(int index, ust_LogFile lf)
+        {
+            db_logfileRecord lfr = new db_logfileRecord();
+            string Code = DB[index].Smeta.Code;
+            int ind = alfr_findSmetaIndex(Code, lf);
+
+            lfr.File = lf.File;
+            lfr.Data.AddRange(lf.Body[ind].Data);
+            lfr.SmetaDescription = lf.Body[ind].Description;
+            alfr_fillErrors(ref lfr);
+            DB[index].Logs.Add(lfr);
+        }
+        
+        #endregion
+
+        #region Search methods
+
+        public int FindEqSmeta(string Code)
+        {
+            return DB.FindIndex((db_record dbr) => Code == dbr.Smeta.Code);
+        }
+
+        #endregion
+
+
+        /*
         private bool IndexOfError(ust_LogSmetaData lsd)  //предикат метода errorRecFill
         {
             string mrk = "Ошибка";
@@ -116,8 +180,10 @@ namespace ConsoleApplication1
             if(DB == null) return false;
 
             return (index >= 0 && index <= (DB.Count - 1)) ? true : false;
-        }
+        }*/
     }
+
+
 
 
     class DBConverter
