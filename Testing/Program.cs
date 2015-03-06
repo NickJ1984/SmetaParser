@@ -20,7 +20,7 @@ namespace ConsoleApplication1
             //ExcelIO eio = new ExcelIO(@"D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Archive_logs\Log_2014-12-30_15-25-53.xlsx");
             //ExcelIO eio = new ExcelIO(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");
             ust_LogFile[] lf;
-            FileIO fio = new FileIO(@"C:\WORK\Программирование\C#\Visual Studio\Projects\TestingSmetaParser\Archive_logs");
+            FileIO fio = new FileIO(@"C:\WORK\Программирование\Temp\Archive_logs");
             fio.searchPattern = "*.xlsx";
             fio.scan();
             lf = new ust_LogFile[fio.logfiles.Length];
@@ -43,13 +43,17 @@ namespace ConsoleApplication1
                 structureReader sr = new structureReader(sb.getData(), eio);
                 sr.Read();
                 lf[i].Body = sr.smetalog;
-                                
+
                 sb = null;
                 sr = null;
                 eio.CloseWB();
                 System.GC.Collect();
             }
             eio.Quit();
+
+            DBShell dbs = new DBShell();
+            foreach (ust_LogFile ulf in lf) dbs.AddUstLogFile(ulf);
+
             Console.ReadLine();
         }
     }

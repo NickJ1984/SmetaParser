@@ -41,25 +41,29 @@ namespace ConsoleApplication1
     class DBShell
     {
         public List<db_record> DB { get; private set; }
-        
+        private int CurrentIndex = -1;
+        private List<ust_LogFileDescription> Logs;
+
         public DBShell() 
         {
             DB = new List<db_record>();
+            Logs = new List<ust_LogFileDescription>();
         }
 
         #region Add methods
 
-        public void AddElement()
+        private void AddElement()
         {
             if (DB == null) DB = new List<db_record>();
 
             db_record rec = new db_record();
-            
-            rec.Index = DB.Count - 1;
+            rec.Logs = new List<db_logfileRecord>();
+            ++CurrentIndex;
+            rec.Index = CurrentIndex;
             DB.Add(rec);
         }
 
-        public void AddSmetaInfo(int index, ust_LogSmetaDescription lsd)
+        private void AddSmetaInfo(int index, ust_LogSmetaDescription lsd)
         {
             db_record dbr = DB.ElementAt(index);
             db_smetaRecord sr = new db_smetaRecord();
@@ -88,9 +92,7 @@ namespace ConsoleApplication1
 
             List<ust_LogSmetaData> errors = lfr.Data.FindAll(
                 delegate(ust_LogSmetaData lsd) 
-                    {
-                        return lsd.Event.Contains("Ошибка");
-                    });
+                    { return lsd.Event.Contains("Ошибка"); });
            db_errorRecord eR = new db_errorRecord();
            foreach(ust_LogSmetaData err in errors)
            {
@@ -106,9 +108,12 @@ namespace ConsoleApplication1
 
         }
         #endregion
-        public void AddLogFileRecord(int index, ust_LogFile lf)
+        private void AddLogFileRecord(int index, ust_LogFile lf)
         {
             db_logfileRecord lfr = new db_logfileRecord();
+            lfr.Errors = new List<db_errorRecord>();
+            lfr.Data = new List<ust_LogSmetaData>();
+
             string Code = DB[index].Smeta.Code;
             int ind = alfr_findSmetaIndex(Code, lf);
 
@@ -118,108 +123,52 @@ namespace ConsoleApplication1
             alfr_fillErrors(ref lfr);
             DB[index].Logs.Add(lfr);
         }
-        
+
+        private void AddUstLogSmeta(int DBindex, int BodyIndex, ust_LogFile lf)
+        {
+            db_logfileRecord lfr = new db_logfileRecord();
+            lfr.Errors = new List<db_errorRecord>();
+            lfr.Data = new List<ust_LogSmetaData>();
+
+            lfr.File = lf.File;
+            if (lf.Body[BodyIndex].Data != null) lfr.Data = lf.Body[BodyIndex].Data.ToList();
+            lfr.SmetaDescription = lf.Body[BodyIndex].Description;
+            alfr_fillErrors(ref lfr);
+            DB[DBindex].Logs.Add(lfr);
+        }
+
+        public void AddUstLogFile(ust_LogFile lf)
+        {
+            ust_LogFileDescription lfd = lf.File;
+            int index = -1;
+
+            int LFIndex = Logs.FindIndex((ust_LogFileDescription ulfd) => ulfd.FileName == lf.File.FileName);
+            if (LFIndex < 0) Logs.Add(lf.File);
+            else return; //если в базе уже есть подобный файл, значит завершаем обработку
+
+            for(int i = 0; i <= lf.Body.Count() - 1; i++)
+            {
+                index = FindEqSmeta(lf.Body[i].Description.Smeta.Code);
+                if (index < 0)
+                {
+                    AddElement();
+                    index = CurrentIndex;
+                    AddSmetaInfo(index, lf.Body[i].Description);
+                }
+                AddUstLogSmeta(index, i, lf);
+            }
+        }
+
+
+
         #endregion
 
         #region Search methods
-
-        public int FindEqSmeta(string Code)
+        private int FindEqSmeta(string Code)
         {
             return DB.FindIndex((db_record dbr) => Code == dbr.Smeta.Code);
         }
-
         #endregion
-
-
-        /*
-        private bool IndexOfError(ust_LogSmetaData lsd)  //предикат метода errorRecFill
-        {
-            string mrk = "Ошибка";
-            return lsd.Event.Contains(mrk);            
-        }
-
-        private void errorRecFill(int DBIndex)
-        {
-            //Ошибка 29. Сумма загружаемого из ГрандСметы акта отличается от суммы соответствующей утвержденной КС-2 в 1С на -72 317,66
-
-            List<ust_LogSmetaData> Data = new List<ust_LogSmetaData>(DB[DBIndex].Logs[DB[DBIndex].Logs.Count - 1].Data);
-            int[] eInd = new int[1];
-            int cnt = 0;
-
-            int index = Data.FindIndex(0, IndexOfError);
-            if (index == -1) return;
-            
-            while (index != -1)
-            {
-                Array.Resize<int>(ref eInd, ++cnt);
-                eInd[eInd.Length - 1] = index;
-
-                index = Data.FindIndex(index + 1, IndexOfError);
-            }
-
-            db_errorRecord er = new db_errorRecord();
-
-            foreach (int ind in eInd)
-            {
-                er.Description = null; er.Number = 0; er.RecordIndex = 0; //reinit
-
-                string ev = Data[ind].Event;
-                int iOfDot = ev.IndexOf('.');
-                int iOfSpc = ev.IndexOf(' ');
-
-                er.Number = int.Parse(ev.Substring(iOfSpc + 1, iOfDot - iOfSpc - 1));
-                er.RecordIndex = ind;
-                er.Description = ev.Substring(iOfDot + 2);
-
-                DB[DBIndex].Logs[DB[DBIndex].Logs.Count - 1].Errors.Add(er);
-            }
-        }
-
-        private bool isRange(int index)
-        {
-            if(DB == null) return false;
-
-            return (index >= 0 && index <= (DB.Count - 1)) ? true : false;
-        }*/
     }
 
-
-
-
-    class DBConverter
-    {
-        List<db_record> DB;
-        List<string> Indexer;
-
-        public DBConverter() { }
-
-
-        #region Indexer methods
-
-        public int EqSearch(string Code)
-        {
-            // -1 == не найдено
-            return Indexer.IndexOf(Code);
-        }
-
-        public int addIndex(string Code)
-        {
-            Indexer.Add(Code);
-            return Indexer.Count - 1;
-        }
-        
-        #endregion
-
-        #region DB methods
-
-        public void DBNewRecord(ust_LogSmetaDescription lsd)
-        {
-            
-
-        }
-
-
-        #endregion
-
-    }
 }
