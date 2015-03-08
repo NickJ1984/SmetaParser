@@ -16,3 +16,6 @@ D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\
 D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Testing\bin\Debug\Testing.exe
 D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Testing\bin\Debug\Testing.pdb
 D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Testing\obj\Debug\TestingSmetaParser.csprojResolveAssemblyReference.cache
+K:\Git\SmetaParser\Testing\bin\Debug\Testing.exe.config
+K:\Git\SmetaParser\Testing\obj\Debug\Testing.exe
+K:\Git\SmetaParser\Testing\obj\Debug\Testing.pdb
