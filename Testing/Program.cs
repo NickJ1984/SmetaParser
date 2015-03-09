@@ -11,10 +11,44 @@ namespace ConsoleApplication1
 {
     class Program
     {
-        
+        static void dbgSort()
+        {
+            Serializer srl = new Serializer();
+            srl.path = @"K:\Git\Test\DBSData.dat";
+            long t1 = DateTime.Now.Ticks;
+            srl.Read();
+            DBShell dbs = (DBShell)srl.obj;
+            srl.obj = null;
+            System.GC.Collect();
+            long t2 = DateTime.Now.Ticks;
+            Console.WriteLine("Time to load: {0} ticks", t2 - t1);
+            
+            Console.WriteLine("Start log files sorting");
+            t1 = DateTime.Now.Ticks;
+            dbs.SortLogFiles();
+            t2 = DateTime.Now.Ticks;
+                        
+            Console.WriteLine("Finish log files sorting");
+            Console.WriteLine("Time: {0} ticks", t2 - t1);
+            
+            
+            Console.WriteLine("Start DB sorting");
+            t1 = DateTime.Now.Ticks;
+            dbs.ActualizeDB();
+            t2 = DateTime.Now.Ticks;
+            Console.WriteLine("Finish DB sorting");
+            Console.WriteLine("Time: {0} ticks", t2 - t1);
+            srl.obj = dbs;
+            srl.Write();
+            Console.ReadLine();
+            
+        }
 
         static void Main(string[] args)
         {
+            dbgSort();
+            return;
+
             ust_LogFile[] lf;
             FileIO fio = new FileIO(@"K:\Git\Test\AllLogs");
             Serializer srl = new Serializer();

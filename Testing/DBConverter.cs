@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
+
+    #region Structures
+
     [Serializable]
     public struct db_smetaRecord
     {
@@ -14,6 +17,7 @@ namespace ConsoleApplication1
         public string Object;
         public string Project;
         public DateTime DateLoad;
+        public bool Loaded;
     }
 
     [Serializable]
@@ -40,6 +44,8 @@ namespace ConsoleApplication1
         public List<db_logfileRecord> Logs;
         public int Index;
     }
+
+    #endregion
 
     [Serializable]
     class DBShell
@@ -72,10 +78,12 @@ namespace ConsoleApplication1
             db_record dbr = DB.ElementAt(index);
             db_smetaRecord sr = new db_smetaRecord();
             sr.Code = lsd.Smeta.Code;
+            
             sr.DateLoad = lsd.LoadTime;
             sr.Name = lsd.Smeta.Name;
             sr.Object = lsd.Smeta.Object;
             sr.Project = lsd.Smeta.Project;
+            sr.Loaded = lsd.Loaded;
             dbr.Smeta = sr;
             DB[index] = dbr;
         }
@@ -171,7 +179,7 @@ namespace ConsoleApplication1
             }
         }
 
-
+        
 
         #endregion
 
@@ -181,6 +189,29 @@ namespace ConsoleApplication1
             return DB.FindIndex((db_record dbr) => Code == dbr.Smeta.Code);
         }
         #endregion
+
+        #region Sort methods
+
+        public void SortLogFiles()
+        {
+            Logs.Sort(delegate(ust_LogFileDescription lfd, ust_LogFileDescription lfd2)
+            { return lfd.DateOfCreation.CompareTo(lfd2.DateOfCreation); });
+        }
+
+        public void ActualizeDB()
+        {
+            for (int i = 0; i < DB.Count; i++)
+            {
+                DB[i].Logs.Sort(delegate(db_logfileRecord x, db_logfileRecord y)
+                { return x.File.DateOfCreation.CompareTo(y.File.DateOfCreation); });
+                
+                AddSmetaInfo(i, DB[i].Logs[DB[i].Logs.Count - 1].SmetaDescription);
+            }
+        }
+
+        #endregion
+
+
     }
 
 }
