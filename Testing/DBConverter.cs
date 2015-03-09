@@ -192,7 +192,7 @@ namespace ConsoleApplication1
 
         #region Sort methods
 
-        public void SortLogFiles()
+        private void SortLogFiles()
         {
             Logs.Sort(delegate(ust_LogFileDescription lfd, ust_LogFileDescription lfd2)
             { return lfd.DateOfCreation.CompareTo(lfd2.DateOfCreation); });
@@ -200,6 +200,7 @@ namespace ConsoleApplication1
 
         public void ActualizeDB()
         {
+            SortLogFiles();
             for (int i = 0; i < DB.Count; i++)
             {
                 DB[i].Logs.Sort(delegate(db_logfileRecord x, db_logfileRecord y)
