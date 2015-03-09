@@ -15,6 +15,7 @@ namespace ConsoleApplication1
         private int top;
         private int left;
         public bool percentOutput { set; get; }
+        public string Information;
 
         //public void ProgressBar() { }
         public ProgressBar(int maxValue) { max = maxValue; }
@@ -29,6 +30,7 @@ namespace ConsoleApplication1
         {
             Console.SetCursorPosition(left, top);
             Console.WriteLine("Progress: {0}/{1}", max, current);
+            if(Information != null || Information != "") Console.WriteLine("Info: {0}", Information);
         }
 
         public void NextStep(int Val = -1)

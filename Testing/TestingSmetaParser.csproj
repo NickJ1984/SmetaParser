@@ -69,7 +69,6 @@
     <Compile Include="Serializer.cs" />
     <Compile Include="StructureBuilder.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProgramFIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StrSupport.cs" />
     <Compile Include="structCode.cs" />

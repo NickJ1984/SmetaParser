@@ -297,13 +297,21 @@ namespace ConsoleApplication1
             return find(text, adr1.get_Address(Excel.XlReferenceStyle.xlA1), adr2.get_Address(Excel.XlReferenceStyle.xlA1), ADR);
         }
 
-        public string find_once(string Text, string Adr1, string Adr2, Excel.Range StartFrom = null)
+        public string find_once(string Text, string adrStart, string adrFinish, Excel.Range StartFrom = null)
         {
-            Excel.Range area = appExcel.get_Range(Adr1, Adr2);
+            Excel.Range area = appExcel.get_Range(adrStart, adrFinish);
             Excel.Range firstFind = null;
+            int min = getRow(adrStart);
+            int max = getRow(adrFinish);
 
             if (StartFrom != null) firstFind = area.Find(Text, StartFrom);
             else firstFind = area.Find(Text);
+
+            if (firstFind != null) //проверка вхождения в диапазон
+            {
+                int currRow = getRow(addressDollarClear(firstFind.get_Address()));
+                if (currRow < min || currRow > max) firstFind = null;
+            }
 
             return (firstFind != null) ? addressDollarClear(firstFind.get_Address()) : null;
         }

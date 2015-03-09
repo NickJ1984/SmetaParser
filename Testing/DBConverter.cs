@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
+    [Serializable]
     public struct db_smetaRecord
     {
         public string Code;
@@ -15,13 +16,15 @@ namespace ConsoleApplication1
         public DateTime DateLoad;
     }
 
+    [Serializable]
     public struct db_errorRecord
     {
         public int Number;
         public string Description;
         //public int RecordIndex;
     }
-
+    
+    [Serializable]
     public struct db_logfileRecord
     {
         public ust_LogFileDescription File;
@@ -30,6 +33,7 @@ namespace ConsoleApplication1
         public List<db_errorRecord> Errors;
     }
 
+    [Serializable]
     public struct db_record
     {
         public db_smetaRecord Smeta;
@@ -37,7 +41,7 @@ namespace ConsoleApplication1
         public int Index;
     }
 
-
+    [Serializable]
     class DBShell
     {
         public List<db_record> DB { get; private set; }
@@ -100,8 +104,16 @@ namespace ConsoleApplication1
                int iOfDot = err.Event.IndexOf('.');
                int iOfSpc = err.Event.IndexOf(' ');
 
-               eR.Number = int.Parse(err.Event.Substring(iOfSpc + 1, iOfDot - iOfSpc - 1));
-               eR.Description = err.Event.Substring(iOfDot + 2);
+               if (iOfDot > 0 && iOfSpc > 0)
+               {
+                   eR.Number = int.Parse(err.Event.Substring(iOfSpc + 1, iOfDot - iOfSpc - 1));
+                   eR.Description = err.Event.Substring(iOfDot + 2);
+               }
+               else
+               {
+                   eR.Number = 0;
+                   eR.Description = err.Event;
+               }
 
                lfr.Errors.Add(eR);
            }

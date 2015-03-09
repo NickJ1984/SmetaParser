@@ -21,6 +21,7 @@ namespace ConsoleApplication1
      * 
      */
 
+    
     class structureReader
     {
         #region Variables

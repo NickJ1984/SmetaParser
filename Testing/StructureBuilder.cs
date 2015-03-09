@@ -134,6 +134,8 @@ namespace ConsoleApplication1
                 return;
             }
 
+            int dbg_smetaCount = 0;
+
             adrEvEnd = eio.getAddress(eio.maxRows, eventsCol);
             adrSmEnd = eio.getAddress(eio.maxRows, smetaCol);
             
@@ -145,9 +147,11 @@ namespace ConsoleApplication1
             while (adrSm != null)
             {
                 addSmeta(eio.getAddressInitial(adrSm));
+                dbg_smetaCount++;
                 adrEv = getAdrEv(adrSm);
                 addEvent(eio.find_exception("", adrEv, "A" + eio.maxRows));
 
+                adrSm = (data[current].events == null) ? adrSm : "B" + (eio.getRow(data[current].events[data[current].events.Length - 1]) + 1);
                 adrSm = getAdrSm(adrSm);
             }
             isBuilded = true;

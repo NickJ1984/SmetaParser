@@ -103,7 +103,9 @@ namespace ConsoleApplication1
         public string searchPattern { get; set; }
         
         public bool isExists { get; private set; }
+        public bool TempExclude = true;
         private bool isCollected;
+        private string markTempFile = "~$";
         
         #region Constructors
 
@@ -157,6 +159,9 @@ namespace ConsoleApplication1
         private void getFilesList()
         {
             fullpath.AddRange(Directory.GetFiles(folder, searchPattern));
+            if (TempExclude)
+                fullpath.RemoveAll(delegate(string path)
+                { return (path.Contains(markTempFile)) ? true : false; });
         }
 
         private void getData()

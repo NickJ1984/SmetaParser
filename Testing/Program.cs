@@ -7,30 +7,30 @@ using System.Threading.Tasks;
 using System.IO;
 using Excel = Microsoft.Office.Interop.Excel;
 
-
 namespace ConsoleApplication1
 {
     class Program
     {
-      
+        
+
         static void Main(string[] args)
         {
-            //Log_2015-01-12_15-51-37.xlsx
-            //Log_2014-12-30_15-25-53.xlsx
-            //ExcelIO eio = new ExcelIO(@"D:\WORK\Урбан-Груп\Программирование\TestingSmetaParser\SmetaParser\Archive_logs\Log_2014-12-30_15-25-53.xlsx");
-            //ExcelIO eio = new ExcelIO(@"C:\WORK\Log_2015-01-16_15-06-27.xlsx");
             ust_LogFile[] lf;
-            FileIO fio = new FileIO(@"C:\WORK\Программирование\Temp\Archive_logs");
+            FileIO fio = new FileIO(@"K:\Git\Test\AllLogs");
+            Serializer srl = new Serializer();
+            srl.path = @"K:\Git\Test\DBSData.dat";
+
             fio.searchPattern = "*.xlsx";
             fio.scan();
             lf = new ust_LogFile[fio.logfiles.Length];
             ExcelIO eio = new ExcelIO();
 
             ProgressBar pb = new ProgressBar(lf.Length);
-            pb.percentOutput = true;
+            pb.percentOutput = false;
             
             for (int i = 0; i < lf.Length; i++)
             {
+                pb.Information = fio.logfiles[i].FileName;
                 pb.NextStep();
                 pb.Output();
                 lf[i].File = fio.logfiles[i];
@@ -53,6 +53,8 @@ namespace ConsoleApplication1
 
             DBShell dbs = new DBShell();
             foreach (ust_LogFile ulf in lf) dbs.AddUstLogFile(ulf);
+            srl.obj = dbs;
+            srl.Write();
 
             Console.ReadLine();
         }

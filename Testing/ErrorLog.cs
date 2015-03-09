@@ -32,6 +32,7 @@ namespace ConsoleApplication1
         public ust_LogSmetaData[] Data;
     }
 
+    [Serializable]
     public struct ust_LogSmetaDescription
     {
         public ust_Smeta Smeta;
@@ -39,6 +40,7 @@ namespace ConsoleApplication1
         public bool Loaded;
     }
 
+    [Serializable]
     public struct ust_Smeta
     {
         public string FileName;
@@ -51,6 +53,7 @@ namespace ConsoleApplication1
         public string Time;
     }
 
+    [Serializable]
     public struct ust_LogFileDescription
     {
         public string FullPath;
@@ -58,6 +61,7 @@ namespace ConsoleApplication1
         public DateTime DateOfCreation;
     }
 
+    [Serializable]
     public struct ust_LogSmetaData
     {
         public string ppNumber;
