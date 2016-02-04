@@ -22,3 +22,6 @@ K:\Git\SmetaParser\Testing\obj\Debug\Testing.pdb
 K:\Git\SmetaParser\Testing\bin\Debug\Testing.exe
 K:\Git\SmetaParser\Testing\bin\Debug\Testing.pdb
 K:\Git\SmetaParser\Testing\obj\Debug\TestingSmetaParser.csprojResolveAssemblyReference.cache
+G:\Git\_SmetaParser_\Testing\bin\Debug\Testing.exe.config
+G:\Git\_SmetaParser_\Testing\obj\Debug\Testing.exe
+G:\Git\_SmetaParser_\Testing\obj\Debug\Testing.pdb
